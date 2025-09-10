@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+33import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const UserContext = createContext();
 
@@ -22,6 +22,94 @@ export const UserProvider = ({ children }) => {
   });
 
   const [language, setLanguage] = useState(initialLang);
+
+  // Centralized translations for multi-language support
+  const translations = {
+    hindi: {
+      appName: 'क्रॉपएआई',
+      appSubtitle: 'स्मार्ट खेती प्लेटफॉर्म',
+      welcome: 'नमस्ते',
+      online: 'ऑनलाइन',
+      logout: 'लॉगआउट',
+      back: 'वापस जाएं',
+      season: 'मौसम',
+      duration: 'अवधि',
+      water: 'पानी',
+      temp: 'तापमान',
+      yield: 'उपज',
+      care: 'खेती के निर्देश',
+      economics: 'आर्थिक जानकारी',
+      marketPrice: 'बाजार कीमत',
+      investment: 'निवेश',
+      expectedProfit: 'अनुमानित लाभ',
+      chooseCrop: 'इस फसल को चुनें',
+      viewOthers: 'अन्य विकल्प देखें',
+      recentActivity: 'हाल की गतिविधियां',
+    },
+    english: {
+      appName: 'CropAI',
+      appSubtitle: 'Smart Farming Platform',
+      welcome: 'Hello',
+      online: 'Online',
+      logout: 'Logout',
+      back: 'Back',
+      season: 'Season',
+      duration: 'Duration',
+      water: 'Water',
+      temp: 'Temperature',
+      yield: 'Yield',
+      care: 'Care Instructions',
+      economics: 'Economic Information',
+      marketPrice: 'Market Price',
+      investment: 'Investment',
+      expectedProfit: 'Estimated Profit',
+      chooseCrop: 'Choose this crop',
+      viewOthers: 'View other options',
+      recentActivity: 'Recent Activity',
+    },
+    marathi: {
+      appName: 'क्रॉपएआई',
+      appSubtitle: 'स्मार्ट शेती प्लॅटफॉर्म',
+      welcome: 'नमस्कार',
+      online: 'ऑनलाइन',
+      logout: 'लॉगआउट',
+      back: 'परत जा',
+      season: 'हंगाम',
+      duration: 'कालावधी',
+      water: 'पाणी',
+      temp: 'तापमान',
+      yield: 'उत्पादन',
+      care: 'शेतीचे निर्देश',
+      economics: 'आर्थिक माहिती',
+      marketPrice: 'बाजार भाव',
+      investment: 'गुंतवणूक',
+      expectedProfit: 'अनुमानित नफा',
+      chooseCrop: 'हे पीक निवडा',
+      viewOthers: 'इतर पर्याय पहा',
+      recentActivity: 'अलीकडील क्रियाकलाप',
+    },
+    gujarati: {
+      appName: 'ક્રોપએઆઈ',
+      appSubtitle: 'સ્માર્ટ ખેતી પ્લેટફોર્મ',
+      welcome: 'નમસ્તે',
+      online: 'ઓનલાઇન',
+      logout: 'લોગઆઉટ',
+      back: 'પાછા જાઓ',
+      season: 'મોસમ',
+      duration: 'અવધિ',
+      water: 'પાણી',
+      temp: 'તાપમાન',
+      yield: 'ઉત્પાદન',
+      care: 'કાળજી સૂચનાઓ',
+      economics: 'આર્થિક માહિતી',
+      marketPrice: 'બજાર ભાવ',
+      investment: 'રોકાણ',
+      expectedProfit: 'અંદાજિત નફો',
+      chooseCrop: 'આ ફસલ પસંદ કરો',
+      viewOthers: 'અન્ય વિકલ્પો જુઓ',
+      recentActivity: 'તાજેતરની પ્રવૃત્તિ',
+    }
+  };
 
   const [recommendations, setRecommendations] = useState([]);
   const [alerts, setAlerts] = useState([
@@ -66,6 +154,15 @@ export const UserProvider = ({ children }) => {
     } catch (_) {}
   }, [language]);
 
+  // Current language bundle and available languages list
+  const t = translations[language] || translations.hindi;
+  const languages = [
+    { code: 'hindi', name: 'हिंदी', flag: '🇮🇳' },
+    { code: 'english', name: 'English', flag: '🇺🇸' },
+    { code: 'marathi', name: 'मराठी', flag: '🇮🇳' },
+    { code: 'gujarati', name: 'ગુજરાતી', flag: '🇮🇳' }
+  ];
+
   const value = {
     user,
     updateUser,
@@ -74,7 +171,10 @@ export const UserProvider = ({ children }) => {
     alerts,
     addAlert,
     language,
-    changeLanguage
+    changeLanguage,
+    translations,
+    t,
+    languages
   };
 
   return (
