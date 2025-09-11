@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Sprout, Globe, Eye, EyeOff, Smartphone, Lock } from 'lucide-react';
+import { Sprout, Globe, Eye, EyeOff, Smartphone, Lock, User } from 'lucide-react';
 import { useUser } from '../context/UserContext';
 
 const LoginRegister = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const { language, changeLanguage } = useUser();
+  const { language, changeLanguage, loginUser } = useUser();
   const [formData, setFormData] = useState({
+    name: '',
     phone: '',
     password: ''
   });
@@ -22,6 +23,7 @@ const LoginRegister = ({ onLogin }) => {
     hindi: {
       title: 'क्रॉपएआई में आपका स्वागत है',
       subtitle: 'स्मार्ट खेती के लिए AI आधारित प्लेटफॉर्म',
+      name: 'आपका नाम',
       phone: 'फोन नंबर',
       password: 'पासवर्ड',
       login: 'लॉगिन करें',
@@ -33,6 +35,7 @@ const LoginRegister = ({ onLogin }) => {
     english: {
       title: 'Welcome to CropAI',
       subtitle: 'AI-powered platform for smart farming',
+      name: 'Your Name',
       phone: 'Phone Number',
       password: 'Password',
       login: 'Login',
@@ -44,6 +47,7 @@ const LoginRegister = ({ onLogin }) => {
     marathi: {
       title: 'क्रॉपएआई मध्ये आपले स्वागत आहे',
       subtitle: 'स्मार्ट शेतीसाठी AI-आधारित प्लॅटफॉर्म',
+      name: 'तुमचे नाव',
       phone: 'फोन नंबर',
       password: 'पासवर्ड',
       login: 'लॉगिन करा',
@@ -55,6 +59,7 @@ const LoginRegister = ({ onLogin }) => {
     gujarati: {
       title: 'ક્રોપએઆઈ માં આપનું સ્વાગત છે',
       subtitle: 'સ્માર્ટ ખેતી માટે AI-આધારિત પ્લેટફોર્મ',
+      name: 'તમારું નામ',
       phone: 'ફોન નંબર',
       password: 'પાસવર્ડ',
       login: 'લૉગિન કરો',
@@ -69,7 +74,14 @@ const LoginRegister = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simulate login/register
+    // Use the entered name or fallback to default
+    const userData = {
+      name: formData.name || (formData.phone === '+91 98765 43210' ? 'राम कुमार' : 'नया किसान'),
+      phone: formData.phone,
+      location: 'मध्य प्रदेश, भारत',
+      farmSize: '5 एकड़'
+    };
+    loginUser(userData);
     onLogin('farmer');
   };
 
@@ -121,6 +133,23 @@ const LoginRegister = ({ onLogin }) => {
         {/* Form */}
         <div className="card">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Name Field - Show for both login and register */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <User className="inline w-4 h-4 mr-2" />
+                {t.name}
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder={language === 'english' ? 'Enter your name' : 'अपना नाम दर्ज करें'}
+                className="input-field"
+                required={!isLogin}
+              />
+            </div>
+
             {/* Phone Number */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -183,13 +212,31 @@ const LoginRegister = ({ onLogin }) => {
           {/* Demo Login Buttons */}
           <div className="mt-6 space-y-3">
             <button
-              onClick={() => onLogin('farmer')}
+              onClick={() => {
+                const userData = {
+                  name: formData.name || 'राम कुमार',
+                  phone: '+91 98765 43210',
+                  location: 'मध्य प्रदेश, भारत',
+                  farmSize: '5 एकड़'
+                };
+                loginUser(userData);
+                onLogin('farmer');
+              }}
               className="w-full btn-secondary text-lg py-3"
             >
               👨‍🌾 Demo Farmer Login
             </button>
             <button
-              onClick={() => onLogin('admin')}
+              onClick={() => {
+                const userData = {
+                  name: formData.name || 'प्रशासक',
+                  phone: '+91 98765 00000',
+                  location: 'मुख्यालय',
+                  farmSize: 'N/A'
+                };
+                loginUser(userData);
+                onLogin('admin');
+              }}
               className="w-full btn-secondary text-lg py-3"
             >
               👨‍💼 Demo Admin Login

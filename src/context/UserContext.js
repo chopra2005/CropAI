@@ -1,4 +1,4 @@
-33import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const UserContext = createContext();
 
@@ -18,7 +18,9 @@ export const UserProvider = ({ children }) => {
     phone: '+91 98765 43210',
     location: 'मध्य प्रदेश, भारत',
     farmSize: '5 एकड़',
-    language: initialLang
+    language: initialLang,
+    isLoggedIn: false,
+    loginTime: null
   });
 
   const [language, setLanguage] = useState(initialLang);
@@ -45,6 +47,9 @@ export const UserProvider = ({ children }) => {
       chooseCrop: 'इस फसल को चुनें',
       viewOthers: 'अन्य विकल्प देखें',
       recentActivity: 'हाल की गतिविधियां',
+      farmSize: 'खेत का आकार',
+      currentSeason: 'वर्तमान मौसम',
+      successRate: 'सफलता दर',
     },
     english: {
       appName: 'CropAI',
@@ -66,6 +71,9 @@ export const UserProvider = ({ children }) => {
       chooseCrop: 'Choose this crop',
       viewOthers: 'View other options',
       recentActivity: 'Recent Activity',
+      farmSize: 'Farm Size',
+      currentSeason: 'Current Season',
+      successRate: 'Success Rate',
     },
     marathi: {
       appName: 'क्रॉपएआई',
@@ -87,6 +95,9 @@ export const UserProvider = ({ children }) => {
       chooseCrop: 'हे पीक निवडा',
       viewOthers: 'इतर पर्याय पहा',
       recentActivity: 'अलीकडील क्रियाकलाप',
+      farmSize: 'शेताचा आकार',
+      currentSeason: 'सध्याचा हंगाम',
+      successRate: 'यश दर',
     },
     gujarati: {
       appName: 'ક્રોપએઆઈ',
@@ -108,6 +119,9 @@ export const UserProvider = ({ children }) => {
       chooseCrop: 'આ ફસલ પસંદ કરો',
       viewOthers: 'અન્ય વિકલ્પો જુઓ',
       recentActivity: 'તાજેતરની પ્રવૃત્તિ',
+      farmSize: 'ખેતરનું કદ',
+      currentSeason: 'વર્તમાન મોસમ',
+      successRate: 'સફળતા દર',
     }
   };
 
@@ -115,24 +129,51 @@ export const UserProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([
     {
       id: 1,
-      type: 'weather',
       title: 'मौसम चेतावनी',
+      titleEn: 'Weather Alert',
+      titleMr: 'हवामान चेतावणी',
+      titleGu: 'હવામાન ચેતવણી',
       message: 'आज शाम को बारिश की संभावना है',
+      messageEn: 'Rain expected this evening',
+      messageMr: 'आज संध्याकाळी पाऊस होण्याची शक्यता आहे',
+      messageGu: 'આજે સાંજે વરસાદની શક્યતા છે',
       priority: 'high',
       timestamp: new Date().toISOString()
     },
     {
       id: 2,
-      type: 'pest',
       title: 'कीट प्रबंधन',
-      message: 'गेहूं में रस्ट रोग का खतरा',
+      titleEn: 'Pest Management',
+      titleMr: 'कीड व्यवस्थापन',
+      titleGu: 'જંતુ વ્યવસ્થાપન',
+      message: 'गेहूं में कीट का खतरा',
+      messageEn: 'Pest threat in wheat crops',
+      messageMr: 'गहू पिकात कीडांचा धोका',
+      messageGu: 'ઘઉંના પાકમાં જંતુનો ખતરો',
       priority: 'medium',
-      timestamp: new Date(Date.now() - 86400000).toISOString()
+      timestamp: new Date().toISOString()
     }
   ]);
 
   const updateUser = (newUserData) => {
     setUser(prev => ({ ...prev, ...newUserData }));
+  };
+
+  const loginUser = (userData) => {
+    setUser(prev => ({ 
+      ...prev, 
+      ...userData, 
+      isLoggedIn: true, 
+      loginTime: new Date().toISOString() 
+    }));
+  };
+
+  const logoutUser = () => {
+    setUser(prev => ({ 
+      ...prev, 
+      isLoggedIn: false, 
+      loginTime: null 
+    }));
   };
 
   const addRecommendation = (recommendation) => {
@@ -166,6 +207,8 @@ export const UserProvider = ({ children }) => {
   const value = {
     user,
     updateUser,
+    loginUser,
+    logoutUser,
     recommendations,
     addRecommendation,
     alerts,

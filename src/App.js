@@ -6,6 +6,7 @@ import CropRecommendationInput from './components/CropRecommendationInput';
 import RecommendationResult from './components/RecommendationResult';
 import CropDetail from './components/CropDetail';
 import AlertsReminders from './components/AlertsReminders';
+import ProfileSettings from './components/ProfileSettings';
 import AdminDashboard from './components/AdminDashboard';
 import { Wireframes } from './components/Wireframes';
 import { UserProvider } from './context/UserContext';
@@ -88,6 +89,16 @@ function App() {
               element={
                 isAuthenticated ? (
                   <AlertsReminders />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                isAuthenticated ? (
+                  <ProfileSettings />
                 ) : (
                   <Navigate to="/" replace />
                 )
