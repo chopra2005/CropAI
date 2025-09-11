@@ -1,6 +1,6 @@
-# Digital AI-based Crop Recommendation Platform
+CropAI
 
-## Problem Statement 25030 - SIH 2025
+
 
 A comprehensive digital platform designed to provide AI-powered crop recommendations to farmers, helping them make informed decisions about what crops to plant based on their specific farm conditions.
 
