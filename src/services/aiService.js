@@ -304,7 +304,7 @@ class AIService {
     };
 
     // This method is now deprecated - using comprehensive crop database
-    return this.getFallbackRecommendation(farmData);
+    return this.getFallbackRecommendation({});
   }
 
   async getWeatherBasedAdvice(location) {
