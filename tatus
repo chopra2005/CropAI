@@ -1,0 +1,57 @@
+[1mdiff --cc build/asset-manifest.json[m
+[1mindex e27eeaa,5f8350b..0000000[m
+[1m--- a/build/asset-manifest.json[m
+[1m+++ b/build/asset-manifest.json[m
+[36m@@@ -1,13 -1,13 +1,25 @@@[m
+  {[m
+    "files": {[m
+[32m++<<<<<<< HEAD[m
+[32m +    "main.css": "/static/css/main.049d48dd.css",[m
+[32m +    "main.js": "/static/js/main.09cea7d8.js",[m
+[32m +    "index.html": "/index.html",[m
+[32m +    "main.049d48dd.css.map": "/static/css/main.049d48dd.css.map",[m
+[32m +    "main.09cea7d8.js.map": "/static/js/main.09cea7d8.js.map"[m
+[32m +  },[m
+[32m +  "entrypoints": [[m
+[32m +    "static/css/main.049d48dd.css",[m
+[32m +    "static/js/main.09cea7d8.js"[m
+[32m++=======[m
+[32m+     "main.css": "/CropAI/static/css/main.b1a4020b.css",[m
+[32m+     "main.js": "/CropAI/static/js/main.08103489.js",[m
+[32m+     "index.html": "/CropAI/index.html",[m
+[32m+     "main.b1a4020b.css.map": "/CropAI/static/css/main.b1a4020b.css.map",[m
+[32m+     "main.08103489.js.map": "/CropAI/static/js/main.08103489.js.map"[m
+[32m+   },[m
+[32m+   "entrypoints": [[m
+[32m+     "static/css/main.b1a4020b.css",[m
+[32m+     "static/js/main.08103489.js"[m
+[32m++>>>>>>> 67345ac6fbdb914ba487080c5b65fcbe5f9ccd34[m
+    ][m
+  }[m
+[1mdiff --cc build/index.html[m
+[1mindex a5fe744,cff3002..0000000[m
+[1m--- a/build/index.html[m
+[1m+++ b/build/index.html[m
+[36m@@@ -1,1 -1,1 +1,5 @@@[m
+[31m- <!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Digital AI-based Crop Recommendation Platform for farmers"/><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"><title>CropAI - Smart Farming Platform</title><script defer="defer" src="/static/js/main.09cea7d8.js"></script><link href="/static/css/main.049d48dd.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>[m
+[31m -<!doctype html><html lang="en">np<head><meta charset="utf-8"/><link rel="icon" href="/CropAI/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Digital AI-based Crop Recommendation Platform for farmers"/><link rel="apple-touch-icon" href="/CropAI/logo192.png"/><link rel="manifest" href="/CropAI/manifest.json"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"><title>CropAI - Smart Farming Platform</title><script defer="defer" src="/CropAI/static/js/main.08103489.js"></script><link href="/CropAI/static/css/main.b1a4020b.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>[m
+[32m++<<<<<<< HEAD[m
+[32m++<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Digital AI-based Crop Recommendation Platform for farmers"/><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"><title>CropAI - Smart Farming Platform</title><script defer="defer" src="/static/js/main.09cea7d8.js"></script><link href="/static/css/main.049d48dd.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>[m
+[32m++=======[m
+[32m++<!doctype html><html lang="en">np<head><meta charset="utf-8"/><link rel="icon" href="/CropAI/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Digital AI-based Crop Recommendation Platform for farmers"/><link rel="apple-touch-icon" href="/CropAI/logo192.png"/><link rel="manifest" href="/CropAI/manifest.json"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"><title>CropAI - Smart Farming Platform</title><script defer="defer" src="/CropAI/static/js/main.08103489.js"></script><link href="/CropAI/static/css/main.b1a4020b.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>[m
+[32m++>>>>>>> 67345ac6fbdb914ba487080c5b65fcbe5f9ccd34[m
+[1mdiff --cc package-lock.json[m
+[1mindex bed2e79,27b85e1..0000000[m
+[1m--- a/package-lock.json[m
+[1m+++ b/package-lock.json[m
+[36m@@@ -17821,7 -17949,6 +17949,10 @@@[m
+        "version": "4.9.5",[m
+        "resolved": "https://registry.npmjs.org/typescript/-/typescript-4.9.5.tgz",[m
+        "integrity": "sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==",[m
+[32m++<<<<<<< HEAD[m
+[32m +      "license": "Apache-2.0",[m
+[32m++=======[m
+[32m++>>>>>>> 67345ac6fbdb914ba487080c5b65fcbe5f9ccd34[m
+        "peer": true,[m
+        "bin": {[m
+          "tsc": "bin/tsc",[m

@@ -2,7 +2,7 @@ import React from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useUser } from '../context/UserContext';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Sprout, Calendar, MapPin, Droplets, Sun, TrendingUp, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Sprout, Calendar, MapPin, Droplets, Sun, TrendingUp } from 'lucide-react';
 
 const CropDetail = () => {
   const { cropId } = useParams();
@@ -59,25 +59,25 @@ const CropDetail = () => {
     marathi: {
       back: 'परत जा',
       details: 'पीक तपशील',
-      season: 'હંગામ',
+      season: 'हंगाम',
       duration: 'कालावधी',
-      yield: 'ઉત્પાદન',
-      water: 'પાણી',
-      temp: 'તાપમાન',
-      soil: 'માટી',
-      timeline: 'શેતીचा वेळ',
-      sowing: 'પેરણીचा वेळ',
-      harvest: 'કાપણીचा સમય',
-      varieties: 'યોગ્ય વાણ',
-      benefits: 'ફાયદે',
-      challenges: 'આવહाने',
-      care: 'શેતીचे निर्देश',
-      economics: 'આર્થિક માહિતી',
-      marketPrice: 'બજાર ભાવ',
-      investment: 'ગુંતવણુક',
-      expectedProfit: 'અનુમાનિત નફો',
-      chooseCrop: 'હે પીક પસંદ કરો',
-      viewOthers: 'ઇતર पर्याय पहा'
+      yield: 'उत्पादन',
+      water: 'पाणी',
+      temp: 'तापमान',
+      soil: 'माती',
+      timeline: 'शेतीचा वेळ',
+      sowing: 'पेरणीचा वेळ',
+      harvest: 'कापणीचा समय',
+      varieties: 'योग्य वाण',
+      benefits: 'फायदे',
+      challenges: 'आव्हाने',
+      care: 'शेतीचे निर्देश',
+      economics: 'आर्थिक माहिती',
+      marketPrice: 'बजार भाव',
+      investment: 'गुंतवणूक',
+      expectedProfit: 'अनुमानित नफा',
+      chooseCrop: 'हे पीक पसंद करा',
+      viewOthers: 'इतर पर्याय पहा'
     },
     gujarati: {
       back: 'પાછા જાઓ',

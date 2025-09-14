@@ -209,7 +209,9 @@ const FarmerDashboard = ({ onLogout }) => {
     },
     {
       label: t.currentSeason,
-      value: language === 'english' ? 'Rabi' : 'रबी',
+      value: language === 'english' ? 'Rabi' : 
+             language === 'marathi' ? 'रबी' :
+             language === 'gujarati' ? 'રબી' : 'रबी',
       icon: <Calendar className="w-5 h-5" />
     },
     {
@@ -330,11 +332,21 @@ const FarmerDashboard = ({ onLogout }) => {
                   alert.priority === 'high' ? 'bg-red-500' : 'bg-yellow-500'
                 }`}></div>
                 <div className="flex-1">
-                  <p className="font-medium text-gray-800">{alert.title}</p>
-                  <p className="text-sm text-gray-600">{alert.message}</p>
+                  <p className="font-medium text-gray-800">
+                    {language === 'english' ? alert.titleEn || alert.title : 
+                     language === 'marathi' ? alert.titleMr || alert.title :
+                     language === 'gujarati' ? alert.titleGu || alert.title : alert.title}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {language === 'english' ? alert.messageEn || alert.message : 
+                     language === 'marathi' ? alert.messageMr || alert.message :
+                     language === 'gujarati' ? alert.messageGu || alert.message : alert.message}
+                  </p>
                 </div>
                 <span className="text-xs text-gray-500">
-                  {new Date(alert.timestamp).toLocaleDateString('hi-IN')}
+                  {new Date(alert.timestamp).toLocaleDateString(
+                    language === 'english' ? 'en-IN' : 'hi-IN'
+                  )}
                 </span>
               </div>
             ))}

@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Sprout, TrendingUp, Calendar, Droplets, Sun } from 'lucide-react';
+import { ArrowLeft, Sprout, TrendingUp, Calendar, Droplets, Sun, Cloud, Thermometer } from 'lucide-react';
+import aiService from '../services/aiService';
 
 const RecommendationResult = () => {
   const navigate = useNavigate();
   const { language } = useUser();
+  const [recommendations, setRecommendations] = useState([]);
+  const [weatherData, setWeatherData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const t = {
     hindi: {
@@ -27,7 +31,17 @@ const RecommendationResult = () => {
       save: 'सहेजें',
       needNew: 'नई सिफारिश चाहिए?',
       newHint: 'अगर आप अलग मापदंडों के साथ नई सिफारिश चाहते हैं',
-      getNew: 'नई सिफारिश प्राप्त करें'
+      getNew: 'नई सिफारिश प्राप्त करें',
+      weatherInfo: 'मौसम की जानकारी',
+      loading: 'AI सिफारिशें लोड हो रही हैं...',
+      kharif: 'खरीफ',
+      rabi: 'रबी',
+      zaid: 'ज़ायद',
+      days: 'दिन',
+      quintalsPerHectare: 'क्विंटल/हेक्टेयर',
+      high: 'उच्च',
+      medium: 'मध्यम',
+      low: 'कम'
     },
     english: {
       back: 'Back',
@@ -47,7 +61,17 @@ const RecommendationResult = () => {
       save: 'Save',
       needNew: 'Need a new recommendation?',
       newHint: 'Get a new recommendation with different parameters',
-      getNew: 'Get New Recommendation'
+      getNew: 'Get New Recommendation',
+      weatherInfo: 'Weather Information',
+      loading: 'Loading AI recommendations...',
+      kharif: 'Kharif',
+      rabi: 'Rabi',
+      zaid: 'Zaid',
+      days: 'days',
+      quintalsPerHectare: 'quintals/hectare',
+      high: 'High',
+      medium: 'Medium',
+      low: 'Low'
     },
     marathi: {
       back: 'परत जा',
@@ -67,7 +91,17 @@ const RecommendationResult = () => {
       save: 'जतन करा',
       needNew: 'नवीन शिफारस हवी?',
       newHint: 'वेगळ्या निकषांसह नवीन शिफारस मिळवा',
-      getNew: 'नवीन शिफारस मिळवा'
+      getNew: 'नवीन शिफारस मिळवा',
+      weatherInfo: 'हवामान माहिती',
+      loading: 'AI शिफारसी लोड होत आहेत...',
+      kharif: 'खरीप',
+      rabi: 'रब्बी',
+      zaid: 'झायद',
+      days: 'दिवस',
+      quintalsPerHectare: 'क्विंटल/हेक्टर',
+      high: 'उच्च',
+      medium: 'मध्यम',
+      low: 'कमी'
     },
     gujarati: {
       back: 'પાછા જાઓ',
@@ -84,15 +118,53 @@ const RecommendationResult = () => {
       benefits: 'ફાયદા',
       challenges: 'પડકારો',
       viewDetail: 'વિગતો જુઓ',
-      save: 'સાચવો',
+      save: 'સેવ કરો',
       needNew: 'નવી ભલામણ જોઈએ?',
-      newHint: 'જુદા માપદંડો સાથે નવી ભલામણ મેળવો',
-      getNew: 'નવી ભલામણ મેળવો'
+      newHint: 'અલગ પરિમાણો સાથે નવી ભલામણ મેળવો',
+      getNew: 'નવી ભલામણ મેળવો',
+      weatherInfo: 'હવામાન માહિતી',
+      loading: 'AI ભલામણો લોડ થઈ રહી છે...',
+      kharif: 'ખરીફ',
+      rabi: 'રબી',
+      zaid: 'ઝાયદ',
+      days: 'દિવસ',
+      quintalsPerHectare: 'ક્વિન્ટલ/હેક્ટર',
+      high: 'ઊંચું',
+      medium: 'મધ્યમ',
+      low: 'ઓછું'
     }
   }[language];
 
-  // Mock recommendation data with translations
-  const recommendations = [
+  // Load recommendations on component mount
+  useEffect(() => {
+    const loadRecommendations = async () => {
+      try {
+        // Get stored form data from localStorage
+        const storedData = localStorage.getItem('cropRecommendationData');
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          
+          // Get AI recommendations based on form data
+          const aiRecommendations = await aiService.getCropRecommendation(parsedData);
+          setRecommendations(aiRecommendations.recommendations || []);
+          setWeatherData(aiRecommendations.weatherData);
+        } else {
+          // Fallback to mock data if no form data
+          setRecommendations(mockRecommendations);
+        }
+      } catch (error) {
+        console.error('Error loading recommendations:', error);
+        setRecommendations(mockRecommendations);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadRecommendations();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Mock recommendation data with translations for fallback
+  const mockRecommendations = [
     {
       id: 1,
       confidence: 92,
@@ -179,34 +251,82 @@ const RecommendationResult = () => {
           <p className="text-green-100">{t.aiCount(recommendations.length)}</p>
         </div>
 
-        {/* Recommendations */}
-        <div className="space-y-6">
-          {recommendations.map((rec, index) => {
-            const loc = language === 'english' ? rec.en : rec.hi;
-            return (
-            <div key={rec.id} className="bg-white rounded-2xl p-6 shadow-sm border">
+        {/* Weather Information */}
+        {weatherData && (
+          <div className="bg-blue-50 rounded-2xl p-6 mb-6 border border-blue-200">
+            <div className="flex items-center space-x-3 mb-4">
+              <Cloud className="w-6 h-6 text-blue-600" />
+              <h3 className="text-lg font-semibold text-blue-800">{t.weatherInfo}</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="flex items-center space-x-2">
+                <Thermometer className="w-4 h-4 text-red-500" />
+                <span className="text-sm text-gray-700">{weatherData.temperature}°C</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Droplets className="w-4 h-4 text-blue-500" />
+                <span className="text-sm text-gray-700">{weatherData.humidity}%</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Cloud className="w-4 h-4 text-gray-500" />
+                <span className="text-sm text-gray-700">{weatherData.description}</span>
+              </div>
+              <div className="text-sm text-gray-700">{weatherData.location}</div>
+            </div>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {isLoading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">{t.loading}</p>
+          </div>
+        ) : (
+          /* Recommendations */
+          <div className="space-y-6">
+            {recommendations.map((rec, index) => {
+              // Handle both new AI format and old mock format
+              const cropData = rec.cropName ? {
+                crop: rec.cropName,
+                yield: rec.yield,
+                season: rec.season || 'N/A',
+                duration: rec.duration || 'N/A',
+                water: rec.waterRequirement || 'N/A',
+                description: rec.reason,
+                benefits: rec.careInstructions || [],
+                challenges: rec.riskFactors || []
+              } : (language === 'english' ? rec.en : rec.hi);
+              
+              return (
+              <div key={rec.id || index} className="bg-white rounded-2xl p-6 shadow-sm border">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-4">
                   <div className="bg-green-100 p-3 rounded-xl">
                     <Sprout className="w-8 h-8 text-green-600" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-800">{loc.crop}</h3>
+                    <h3 className="text-2xl font-bold text-gray-800">{cropData.crop}</h3>
                     <div className="flex items-center space-x-2 mt-1">
                       <div className="flex items-center space-x-1">
                         <TrendingUp className="w-4 h-4 text-green-500" />
-                        <span className="text-sm text-gray-600">{rec.confidence}% {t.confidence}</span>
+                        <span className="text-sm text-gray-600">{rec.matchScore || rec.confidence || 85}% {t.confidence}</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-green-600">{loc.yield}</div>
+                  <div className="text-2xl font-bold text-green-600">
+                    {cropData.yield.includes('quintals') || cropData.yield.includes('क्विंटल') ? 
+                      cropData.yield : 
+                      `${cropData.yield.split(' ')[0]} ${t.quintalsPerHectare}`
+                    }
+                  </div>
                   <div className="text-sm text-gray-600">{t.estYield}</div>
                 </div>
               </div>
 
-              <p className="text-gray-700 mb-6">{loc.description}</p>
+              <p className="text-gray-700 mb-6">{cropData.description}</p>
 
               {/* Details Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -215,28 +335,42 @@ const RecommendationResult = () => {
                     <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-sm font-medium text-gray-700">{t.season}</span>
                   </div>
-                  <div className="text-sm text-gray-600">{loc.season}</div>
+                  <div className="text-sm text-gray-600">
+                    {cropData.season === 'kharif' ? t.kharif :
+                     cropData.season === 'rabi' ? t.rabi :
+                     cropData.season === 'zaid' ? t.zaid :
+                     cropData.season}
+                  </div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3">
                   <div className="flex items-center space-x-2 mb-1">
                     <Calendar className="w-4 h-4 text-purple-500" />
                     <span className="text-sm font-medium text-gray-700">{t.duration}</span>
                   </div>
-                  <div className="text-sm text-gray-600">{loc.duration}</div>
+                  <div className="text-sm text-gray-600">
+                    {cropData.duration.includes('days') || cropData.duration.includes('दिन') ? 
+                      cropData.duration : 
+                      `${cropData.duration} ${t.days}`}
+                  </div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3">
                   <div className="flex items-center space-x-2 mb-1">
                     <Droplets className="w-4 h-4 text-blue-500" />
                     <span className="text-sm font-medium text-gray-700">{t.water}</span>
                   </div>
-                  <div className="text-sm text-gray-600">{loc.water}</div>
+                  <div className="text-sm text-gray-600">
+                    {cropData.water === 'high' ? t.high :
+                     cropData.water === 'medium' ? t.medium :
+                     cropData.water === 'low' ? t.low :
+                     cropData.water}
+                  </div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3">
                   <div className="flex items-center space-x-2 mb-1">
                     <Sun className="w-4 h-4 text-yellow-500" />
                     <span className="text-sm font-medium text-gray-700">{t.temp}</span>
                   </div>
-                  <div className="text-sm text-gray-600">{rec.temperature}</div>
+                  <div className="text-sm text-gray-600">{weatherData?.temperature || '20-30'}°C</div>
                 </div>
               </div>
 
@@ -245,7 +379,7 @@ const RecommendationResult = () => {
                 <div>
                   <h4 className="font-bold text-green-700 mb-3">✅ {t.benefits}</h4>
                   <ul className="space-y-2">
-                    {loc.benefits.map((benefit, idx) => (
+                    {cropData.benefits.map((benefit, idx) => (
                       <li key={idx} className="flex items-center space-x-2 text-sm text-gray-700">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
                         <span>{benefit}</span>
@@ -256,7 +390,7 @@ const RecommendationResult = () => {
                 <div>
                   <h4 className="font-bold text-orange-700 mb-3">⚠️ {t.challenges}</h4>
                   <ul className="space-y-2">
-                    {loc.challenges.map((challenge, idx) => (
+                    {cropData.challenges.map((challenge, idx) => (
                       <li key={idx} className="flex items-center space-x-2 text-sm text-gray-700">
                         <div className="w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
                         <span>{challenge}</span>
@@ -269,7 +403,7 @@ const RecommendationResult = () => {
               {/* Action Buttons */}
               <div className="flex space-x-3 mt-6">
                 <button
-                  onClick={() => navigate(`/crop-detail/${rec.id}`)}
+                  onClick={() => navigate(`/crop-detail/${rec.id || index}`)}
                   className="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-green-700 transition-colors"
                 >
                   {t.viewDetail}
@@ -279,8 +413,10 @@ const RecommendationResult = () => {
                 </button>
               </div>
             </div>
-          )})}
-        </div>
+            );
+          })}
+          </div>
+        )}
 
         {/* Get New Recommendation */}
         <div className="mt-8 bg-white rounded-2xl p-6 shadow-sm border">

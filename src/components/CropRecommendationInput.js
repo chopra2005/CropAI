@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
+import LanguageSwitcher from './LanguageSwitcher';
 import { 
   ArrowLeft, 
   MapPin, 
@@ -14,6 +16,7 @@ import {
 
 const CropRecommendationInput = () => {
   const navigate = useNavigate();
+  const { language } = useUser();
   const [formData, setFormData] = useState({
     farmSize: '',
     soilType: '',
@@ -26,26 +29,91 @@ const CropRecommendationInput = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const soilTypes = [
-    { value: 'clay', label: 'चिकनी मिट्टी (Clay)', description: 'भारी और पानी रोकने वाली' },
-    { value: 'loamy', label: 'दोमट मिट्टी (Loamy)', description: 'सर्वोत्तम फसल उत्पादन के लिए' },
-    { value: 'sandy', label: 'बलुई मिट्टी (Sandy)', description: 'हल्की और जल निकासी वाली' },
-    { value: 'silt', label: 'गाद मिट्टी (Silt)', description: 'मध्यम बनावट वाली' },
-    { value: 'red', label: 'लाल मिट्टी (Red Soil)', description: 'लोहे की अधिकता वाली' }
-  ];
+  // Multilingual dropdown options
+  const soilTypeOptions = {
+    hindi: [
+      { value: 'clay', label: 'चिकनी मिट्टी (Clay)', description: 'भारी और पानी रोकने वाली' },
+      { value: 'loamy', label: 'दोमट मिट्टी (Loamy)', description: 'सर्वोत्तम फसल उत्पादन के लिए' },
+      { value: 'sandy', label: 'बलुई मिट्टी (Sandy)', description: 'हल्की और जल निकासी वाली' },
+      { value: 'silt', label: 'गाद मिट्टी (Silt)', description: 'मध्यम बनावट वाली' },
+      { value: 'red', label: 'लाल मिट्टी (Red Soil)', description: 'लोहे की अधिकता वाली' }
+    ],
+    english: [
+      { value: 'clay', label: 'Clay Soil', description: 'Heavy and water-retaining' },
+      { value: 'loamy', label: 'Loamy Soil', description: 'Best for crop production' },
+      { value: 'sandy', label: 'Sandy Soil', description: 'Light and well-draining' },
+      { value: 'silt', label: 'Silt Soil', description: 'Medium texture' },
+      { value: 'red', label: 'Red Soil', description: 'High iron content' }
+    ],
+    marathi: [
+      { value: 'clay', label: 'चिकणी माती (Clay)', description: 'जड आणि पाणी धरून ठेवणारी' },
+      { value: 'loamy', label: 'दोमट माती (Loamy)', description: 'पीक उत्पादनासाठी सर्वोत्तम' },
+      { value: 'sandy', label: 'वालुकामय माती (Sandy)', description: 'हलकी आणि पाणी निचरा करणारी' },
+      { value: 'silt', label: 'गाळाची माती (Silt)', description: 'मध्यम रचना' },
+      { value: 'red', label: 'लाल माती (Red Soil)', description: 'लोहाची जास्त मात्रा' }
+    ],
+    gujarati: [
+      { value: 'clay', label: 'ચીકણી માટી (Clay)', description: 'ભારે અને પાણી રોકનારી' },
+      { value: 'loamy', label: 'દોમટ માટી (Loamy)', description: 'પાક ઉત્પાદન માટે શ્રેષ્ઠ' },
+      { value: 'sandy', label: 'રેતાળ માટી (Sandy)', description: 'હલકી અને પાણી નીકળતી' },
+      { value: 'silt', label: 'કાંપવાળી માટી (Silt)', description: 'મધ્યમ રચના' },
+      { value: 'red', label: 'લાલ માટી (Red Soil)', description: 'લોખંડની વધુ માત્રા' }
+    ]
+  };
 
-  const seasons = [
-    { value: 'kharif', label: 'खरीफ (जुलाई-अक्टूबर)' },
-    { value: 'rabi', label: 'रबी (अक्टूबर-मार्च)' },
-    { value: 'zaid', label: 'ज़ायद (मार्च-जून)' }
-  ];
+  const seasonOptions = {
+    hindi: [
+      { value: 'kharif', label: 'खरीफ (जुलाई-अक्टूबर)' },
+      { value: 'rabi', label: 'रबी (अक्टूबर-मार्च)' },
+      { value: 'zaid', label: 'ज़ायद (मार्च-जून)' }
+    ],
+    english: [
+      { value: 'kharif', label: 'Kharif (July-October)' },
+      { value: 'rabi', label: 'Rabi (October-March)' },
+      { value: 'zaid', label: 'Zaid (March-June)' }
+    ],
+    marathi: [
+      { value: 'kharif', label: 'खरीप (जुलै-ऑक्टोबर)' },
+      { value: 'rabi', label: 'रब्बी (ऑक्टोबर-मार्च)' },
+      { value: 'zaid', label: 'झायद (मार्च-जून)' }
+    ],
+    gujarati: [
+      { value: 'kharif', label: 'ખરીફ (જુલાઈ-ઓક્ટોબર)' },
+      { value: 'rabi', label: 'રબી (ઓક્ટોબર-માર્ચ)' },
+      { value: 'zaid', label: 'ઝાયદ (માર્ચ-જૂન)' }
+    ]
+  };
 
-  const irrigationTypes = [
-    { value: 'rainfed', label: 'वर्षा आधारित' },
-    { value: 'irrigated', label: 'सिंचित' },
-    { value: 'drip', label: 'ड्रिप सिंचाई' },
-    { value: 'sprinkler', label: 'स्प्रिंकलर' }
-  ];
+  const irrigationOptions = {
+    hindi: [
+      { value: 'rainfed', label: 'वर्षा आधारित' },
+      { value: 'irrigated', label: 'सिंचित' },
+      { value: 'drip', label: 'ड्रिप सिंचाई' },
+      { value: 'sprinkler', label: 'स्प्रिंकलर' }
+    ],
+    english: [
+      { value: 'rainfed', label: 'Rain-fed' },
+      { value: 'irrigated', label: 'Irrigated' },
+      { value: 'drip', label: 'Drip Irrigation' },
+      { value: 'sprinkler', label: 'Sprinkler' }
+    ],
+    marathi: [
+      { value: 'rainfed', label: 'पावसावर आधारित' },
+      { value: 'irrigated', label: 'सिंचित' },
+      { value: 'drip', label: 'ड्रिप सिंचन' },
+      { value: 'sprinkler', label: 'स्प्रिंकलर' }
+    ],
+    gujarati: [
+      { value: 'rainfed', label: 'વરસાદ આધારિત' },
+      { value: 'irrigated', label: 'સિંચિત' },
+      { value: 'drip', label: 'ડ્રિપ સિંચાઈ' },
+      { value: 'sprinkler', label: 'સ્પ્રિંકલર' }
+    ]
+  };
+
+  const soilTypes = soilTypeOptions[language] || soilTypeOptions.hindi;
+  const seasons = seasonOptions[language] || seasonOptions.hindi;
+  const irrigationTypes = irrigationOptions[language] || irrigationOptions.hindi;
 
   const handleInputChange = (e) => {
     setFormData({
@@ -58,11 +126,31 @@ const CropRecommendationInput = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate AI processing
-    setTimeout(() => {
+    try {
+      // Store form data in localStorage for the recommendation result page
+      const submissionData = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        language: language
+      };
+      localStorage.setItem('cropRecommendationData', JSON.stringify(submissionData));
+      
+      // Simulate AI processing with realistic delay
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate('/recommendation-result');
+      }, 2000);
+    } catch (error) {
+      console.error('Form submission error:', error);
       setIsLoading(false);
-      navigate('/recommendation-result');
-    }, 2000);
+      const errorMessages = {
+        hindi: 'फॉर्म सबमिट करने में समस्या। कृपया पुनः प्रयास करें।',
+        english: 'Problem submitting form. Please try again.',
+        marathi: 'फॉर्म सबमिट करण्यात समस्या. कृपया पुन्हा प्रयत्न करा.',
+        gujarati: 'ફોર્મ સબમિટ કરવામાં સમસ્યા. કૃપા કરીને ફરી પ્રયાસ કરો.'
+      };
+      alert(errorMessages[language] || errorMessages.hindi);
+    }
   };
 
   const getCurrentLocation = () => {
@@ -77,11 +165,23 @@ const CropRecommendationInput = () => {
         },
         (error) => {
           console.error('Location error:', error);
-          alert('स्थान प्राप्त करने में समस्या। कृपया मैन्युअल रूप से दर्ज करें।');
+          const errorMessages = {
+            hindi: 'स्थान प्राप्त करने में समस्या। कृपया मैन्युअल रूप से दर्ज करें।',
+            english: 'Problem getting location. Please enter manually.',
+            marathi: 'स्थान मिळवण्यात समस्या. कृपया मॅन्युअली प्रविष्ट करा.',
+            gujarati: 'સ્થાન મેળવવામાં સમસ્યા. કૃપા કરીને મેન્યુઅલી દાખલ કરો.'
+          };
+          alert(errorMessages[language] || errorMessages.hindi);
         }
       );
     } else {
-      alert('आपका ब्राउज़र GPS का समर्थन नहीं करता।');
+      const browserMessages = {
+        hindi: 'आपका ब्राउज़र GPS का समर्थन नहीं करता।',
+        english: 'Your browser does not support GPS.',
+        marathi: 'तुमचा ब्राउझर GPS चे समर्थन करत नाही.',
+        gujarati: 'તમારું બ્રાઉઝર GPS ને સપોર્ટ કરતું નથી.'
+      };
+      alert(browserMessages[language] || browserMessages.hindi);
     }
   };
 
@@ -90,17 +190,24 @@ const CropRecommendationInput = () => {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-6 h-6 text-gray-600" />
-            </button>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">फसल सिफारिश</h1>
-              <p className="text-sm text-gray-600">अपने खेत की जानकारी दर्ज करें</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <ArrowLeft className="w-6 h-6 text-gray-600" />
+              </button>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800">
+                  {language === 'english' ? 'Crop Recommendation' : 'फसल सिफारिश'}
+                </h1>
+                <p className="text-sm text-gray-600">
+                  {language === 'english' ? 'Enter your farm information' : 'अपने खेत की जानकारी दर्ज करें'}
+                </p>
+              </div>
             </div>
+            <LanguageSwitcher />
           </div>
         </div>
       </div>
@@ -111,7 +218,7 @@ const CropRecommendationInput = () => {
           <div className="card">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Ruler className="inline w-4 h-4 mr-2" />
-              खेत का आकार
+              {language === 'english' ? 'Farm Size' : 'खेत का आकार'}
             </label>
             <div className="grid grid-cols-2 gap-4">
               <input
@@ -124,9 +231,9 @@ const CropRecommendationInput = () => {
                 required
               />
               <select className="input-field">
-                <option value="acres">एकड़</option>
-                <option value="hectares">हेक्टेयर</option>
-                <option value="bigha">बीघा</option>
+                <option value="acres">{language === 'english' ? 'Acres' : language === 'marathi' ? 'एकर' : language === 'gujarati' ? 'એકર' : 'एकड़'}</option>
+                <option value="hectares">{language === 'english' ? 'Hectares' : language === 'marathi' ? 'हेक्टेयर' : language === 'gujarati' ? 'હેક્ટર' : 'हेक्टेयर'}</option>
+                <option value="bigha">{language === 'english' ? 'Bigha' : language === 'marathi' ? 'बीघा' : language === 'gujarati' ? 'બીઘા' : 'बीघा'}</option>
               </select>
             </div>
           </div>
@@ -135,7 +242,7 @@ const CropRecommendationInput = () => {
           <div className="card">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Droplets className="inline w-4 h-4 mr-2" />
-              मिट्टी का प्रकार
+              {language === 'english' ? 'Soil Type' : 'मिट्टी का प्रकार'}
             </label>
             <select
               name="soilType"
@@ -144,7 +251,7 @@ const CropRecommendationInput = () => {
               className="input-field"
               required
             >
-              <option value="">मिट्टी का प्रकार चुनें</option>
+              <option value="">{language === 'english' ? 'Select soil type' : language === 'marathi' ? 'माती प्रकार निवडा' : language === 'gujarati' ? 'માટીનો પ્રકાર પસંદ કરો' : 'मिट्टी का प्रकार चुनें'}</option>
               {soilTypes.map((soil) => (
                 <option key={soil.value} value={soil.value}>
                   {soil.label} - {soil.description}
@@ -157,7 +264,7 @@ const CropRecommendationInput = () => {
           <div className="card">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <MapPin className="inline w-4 h-4 mr-2" />
-              स्थान
+              {language === 'english' ? 'Location' : 'स्थान'}
             </label>
             <div className="space-y-3">
               <div className="flex space-x-2">
@@ -166,7 +273,7 @@ const CropRecommendationInput = () => {
                   name="location"
                   value={formData.location}
                   onChange={handleInputChange}
-                  placeholder="गांव, जिला, राज्य"
+                  placeholder={language === 'english' ? 'Village, District, State' : language === 'marathi' ? 'गाव, जिल्हा, राज्य' : language === 'gujarati' ? 'ગામ, જિલ્લો, રાજ્ય' : 'गांव, जिला, राज्य'}
                   className="input-field flex-1"
                   required
                 />
@@ -179,7 +286,7 @@ const CropRecommendationInput = () => {
                 </button>
               </div>
               <p className="text-xs text-gray-500">
-                या GPS स्थान प्राप्त करने के लिए बटन दबाएं
+                {language === 'english' ? 'Or press button to get GPS location' : language === 'marathi' ? 'किंवा GPS स्थान मिळविण्यासाठी बटण दाबा' : language === 'gujarati' ? 'અથવા GPS સ્થાન મેળવવા માટે બટન દબાવો' : 'या GPS स्थान प्राप्त करने के लिए बटन दबाएं'}
               </p>
             </div>
           </div>
@@ -188,7 +295,7 @@ const CropRecommendationInput = () => {
           <div className="card">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Wheat className="inline w-4 h-4 mr-2" />
-              पिछली फसल
+              {language === 'english' ? 'Previous Crop' : 'पिछली फसल'}
             </label>
             <input
               type="text"
@@ -204,7 +311,7 @@ const CropRecommendationInput = () => {
           <div className="card">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Calendar className="inline w-4 h-4 mr-2" />
-              फसल सीजन
+              {language === 'english' ? 'Crop Season' : 'फसल सीजन'}
             </label>
             <select
               name="season"
@@ -213,7 +320,7 @@ const CropRecommendationInput = () => {
               className="input-field"
               required
             >
-              <option value="">सीजन चुनें</option>
+              <option value="">{language === 'english' ? 'Select season' : language === 'marathi' ? 'हंगाम निवडा' : language === 'gujarati' ? 'સીઝન પસંદ કરો' : 'सीजन चुनें'}</option>
               {seasons.map((season) => (
                 <option key={season.value} value={season.value}>
                   {season.label}
@@ -226,7 +333,7 @@ const CropRecommendationInput = () => {
           <div className="card">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Droplets className="inline w-4 h-4 mr-2" />
-              सिंचाई का प्रकार
+              {language === 'english' ? 'Irrigation Type' : 'सिंचाई का प्रकार'}
             </label>
             <select
               name="irrigation"
@@ -235,7 +342,7 @@ const CropRecommendationInput = () => {
               className="input-field"
               required
             >
-              <option value="">सिंचाई प्रकार चुनें</option>
+              <option value="">{language === 'english' ? 'Select irrigation type' : language === 'marathi' ? 'सिंचन प्रकार निवडा' : language === 'gujarati' ? 'સિંચાઈ પ્રકાર પસંદ કરો' : 'सिंचाई प्रकार चुनें'}</option>
               {irrigationTypes.map((type) => (
                 <option key={type.value} value={type.value}>
                   {type.label}
@@ -248,7 +355,7 @@ const CropRecommendationInput = () => {
           <div className="card">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Smartphone className="inline w-4 h-4 mr-2" />
-              बजट सीमा (प्रति एकड़)
+              {language === 'english' ? 'Budget Range (per acre)' : 'बजट सीमा (प्रति एकड़)'}
             </label>
             <select
               name="budget"
@@ -256,10 +363,10 @@ const CropRecommendationInput = () => {
               onChange={handleInputChange}
               className="input-field"
             >
-              <option value="">बजट चुनें</option>
-              <option value="low">कम (₹5,000 - ₹15,000)</option>
-              <option value="medium">मध्यम (₹15,000 - ₹30,000)</option>
-              <option value="high">उच्च (₹30,000+)</option>
+              <option value="">{language === 'english' ? 'Select budget' : language === 'marathi' ? 'बजेट निवडा' : language === 'gujarati' ? 'બજેટ પસંદ કરો' : 'बजट चुनें'}</option>
+              <option value="low">{language === 'english' ? 'Low (₹5,000 - ₹15,000)' : language === 'marathi' ? 'कमी (₹5,000 - ₹15,000)' : language === 'gujarati' ? 'ઓછું (₹5,000 - ₹15,000)' : 'कम (₹5,000 - ₹15,000)'}</option>
+              <option value="medium">{language === 'english' ? 'Medium (₹15,000 - ₹30,000)' : language === 'marathi' ? 'मध्यम (₹15,000 - ₹30,000)' : language === 'gujarati' ? 'મધ્યમ (₹15,000 - ₹30,000)' : 'मध्यम (₹15,000 - ₹30,000)'}</option>
+              <option value="high">{language === 'english' ? 'High (₹30,000+)' : language === 'marathi' ? 'उच्च (₹30,000+)' : language === 'gujarati' ? 'ઊંચું (₹30,000+)' : 'उच्च (₹30,000+)'}</option>
             </select>
           </div>
 
@@ -267,17 +374,49 @@ const CropRecommendationInput = () => {
           <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
             <div className="flex items-center space-x-3 mb-3">
               <Zap className="w-6 h-6 text-yellow-600" />
-              <h4 className="font-bold text-yellow-800">AI इंटीग्रेशन पोर्ट</h4>
+              <h4 className="font-bold text-yellow-800">
+                {language === 'english' ? 'AI Integration Port' : 
+                 language === 'marathi' ? 'AI इंटिग्रेशन पोर्ट' :
+                 language === 'gujarati' ? 'AI ઇન્ટિગ્રેશન પોર્ટ' : 'AI इंटीग्रेशन पोर्ट'}
+              </h4>
             </div>
             <p className="text-yellow-700 text-sm mb-3">
-              <strong>बैकएंड मॉडल यहाँ:</strong> यह फॉर्म डेटा Gemini API को भेजा जाएगा जो 
-              मिट्टी, मौसम, और क्षेत्रीय डेटा के आधार पर फसल सिफारिशें प्रदान करेगा।
+              {language === 'english' ? 
+                <><strong>Backend Model Here:</strong> This form data will be sent to Gemini API which will provide crop recommendations based on soil, weather, and regional data.</> :
+                language === 'marathi' ?
+                <><strong>बॅकएंड मॉडेल येथे:</strong> हा फॉर्म डेटा Gemini API ला पाठवला जाईल जो माती, हवामान आणि प्रादेशिक डेटाच्या आधारे पीक शिफारसी प्रदान करेल.</> :
+                language === 'gujarati' ?
+                <><strong>બેકએન્ડ મોડેલ અહીં:</strong> આ ફોર્મ ડેટા Gemini API ને મોકલવામાં આવશે જે માટી, હવામાન અને પ્રાદેશિક ડેટાના આધારે પાક ભલામણો પ્રદાન કરશે.</> :
+                <><strong>बैकएंड मॉडल यहाँ:</strong> यह फॉर्म डेटा Gemini API को भेजा जाएगा जो मिट्टी, मौसम, और क्षेत्रीय डेटा के आधार पर फसल सिफारिशें प्रदान करेगा.</>
+              }
             </p>
             <div className="bg-yellow-100 p-3 rounded-lg">
               <p className="text-yellow-800 text-xs">
-                <strong>API एंडपॉइंट:</strong> POST /api/crop-recommendation<br/>
-                <strong>मॉडल:</strong> Gemini Pro Vision + Custom ML Model<br/>
-                <strong>इनपुट:</strong> Soil data, Weather data, Location, Season
+                {language === 'english' ? (
+                  <>
+                    <strong>API Endpoint:</strong> POST /api/crop-recommendation<br/>
+                    <strong>Model:</strong> Gemini Pro Vision + Custom ML Model<br/>
+                    <strong>Input:</strong> Soil data, Weather data, Location, Season
+                  </>
+                ) : language === 'marathi' ? (
+                  <>
+                    <strong>API एंडपॉइंट:</strong> POST /api/crop-recommendation<br/>
+                    <strong>मॉडेल:</strong> Gemini Pro Vision + Custom ML Model<br/>
+                    <strong>इनपुट:</strong> माती डेटा, हवामान डेटा, स्थान, हंगाम
+                  </>
+                ) : language === 'gujarati' ? (
+                  <>
+                    <strong>API એન્ડપોઇન્ટ:</strong> POST /api/crop-recommendation<br/>
+                    <strong>મોડેલ:</strong> Gemini Pro Vision + Custom ML Model<br/>
+                    <strong>ઇનપુટ:</strong> માટી ડેટા, હવામાન ડેટા, સ્થાન, સીઝન
+                  </>
+                ) : (
+                  <>
+                    <strong>API एंडपॉइंट:</strong> POST /api/crop-recommendation<br/>
+                    <strong>मॉडल:</strong> Gemini Pro Vision + Custom ML Model<br/>
+                    <strong>इनपुट:</strong> Soil data, Weather data, Location, Season
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -293,12 +432,20 @@ const CropRecommendationInput = () => {
             {isLoading ? (
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>AI सिफारिश प्राप्त कर रहा है...</span>
+                <span>
+                  {language === 'english' ? 'Getting AI recommendations...' :
+                   language === 'marathi' ? 'AI शिफारसी मिळवत आहे...' :
+                   language === 'gujarati' ? 'AI ભલામણો મેળવી રહ્યા છીએ...' : 'AI सिफारिश प्राप्त कर रहा है...'}
+                </span>
               </div>
             ) : (
               <div className="flex items-center justify-center space-x-2">
                 <Zap className="w-5 h-5" />
-                <span>सिफारिश प्राप्त करें (AI संचालित)</span>
+                <span>
+                  {language === 'english' ? 'Get Recommendations (AI Powered)' :
+                   language === 'marathi' ? 'शिफारसी मिळवा (AI संचालित)' :
+                   language === 'gujarati' ? 'ભલામણો મેળવો (AI સંચાલિત)' : 'सिफारिश प्राप्त करें (AI संचालित)'}
+                </span>
               </div>
             )}
           </button>

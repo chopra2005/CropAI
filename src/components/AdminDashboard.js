@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom'; // Will be used for future navigation features
 import { 
   LogOut, 
   Users, 
@@ -7,14 +7,13 @@ import {
   Settings, 
   TrendingUp, 
   Globe, 
-  Smartphone,
   Database,
   Shield,
   Activity
 } from 'lucide-react';
 
 const AdminDashboard = ({ onLogout }) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // Will be used for future navigation features
 
   const stats = [
     {

@@ -812,7 +812,7 @@ export const Wireframes = () => {
   );
 };
 
-export default { 
+const WireframesExport = { 
   LoginRegisterWireframe, 
   FarmerDashboardWireframe, 
   CropRecommendationInputWireframe,
@@ -822,3 +822,5 @@ export default {
   AdminDashboardWireframe,
   Wireframes
 };
+
+export default WireframesExport;

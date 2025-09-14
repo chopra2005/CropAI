@@ -6,8 +6,9 @@ import CropRecommendationInput from './components/CropRecommendationInput';
 import RecommendationResult from './components/RecommendationResult';
 import CropDetail from './components/CropDetail';
 import AlertsReminders from './components/AlertsReminders';
+import ProfileSettings from './components/ProfileSettings';
 import AdminDashboard from './components/AdminDashboard';
-import { Wireframes } from './components/Wireframes';
+import WireframesExport from './components/Wireframes';
 import { UserProvider } from './context/UserContext';
 
 function App() {
@@ -94,8 +95,18 @@ function App() {
               } 
             />
             <Route 
+              path="/profile" 
+              element={
+                isAuthenticated ? (
+                  <ProfileSettings />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              } 
+            />
+            <Route 
               path="/wireframes" 
-              element={<Wireframes />} 
+              element={<WireframesExport.Wireframes />} 
             />
           </Routes>
         </div>
