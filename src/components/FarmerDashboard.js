@@ -353,6 +353,56 @@ const FarmerDashboard = ({ onLogout }) => {
           </div>
         </div>
 
+        {/* Past Recommendations */}
+        <div className="mt-6 bg-white rounded-2xl p-6 shadow-sm border">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-gray-800">
+              {language === 'english' ? 'My Past Recommendations' : 
+               language === 'marathi' ? 'माझ्या मागील शिफारसी' :
+               language === 'gujarati' ? 'મારી પાછલી ભલામણો' : 'मेरी पिछली सिफारिशें'}
+            </h3>
+            <button 
+              onClick={() => navigate('/recommendation-result')}
+              className="text-green-600 hover:text-green-700 font-medium text-sm"
+            >
+              {language === 'english' ? 'View All' : 
+               language === 'marathi' ? 'सर्व पहा' :
+               language === 'gujarati' ? 'બધા જુઓ' : 'सभी देखें'}
+            </button>
+          </div>
+          <div className="space-y-3">
+            {(() => {
+              const pastRecommendations = JSON.parse(localStorage.getItem('pastRecommendations') || '[]');
+              if (pastRecommendations.length === 0) {
+                return (
+                  <div className="text-center py-4 text-gray-500">
+                    <p>{language === 'english' ? 'No past recommendations yet' : 
+                         language === 'marathi' ? 'अद्याप कोणत्याही शिफारसी नाहीत' :
+                         language === 'gujarati' ? 'હજુ સુધી કોઈ ભલામણો નથી' : 'अभी तक कोई पिछली सिफारिशें नहीं हैं'}</p>
+                  </div>
+                );
+              }
+              return pastRecommendations.slice(0, 3).map((rec, index) => (
+                <div key={index} className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-800">{rec.cropName || 'Crop Recommendation'}</p>
+                    <p className="text-sm text-gray-600">
+                      {language === 'english' ? `Recommended on ${new Date(rec.timestamp).toLocaleDateString()}` :
+                       language === 'marathi' ? `${new Date(rec.timestamp).toLocaleDateString()} रोजी शिफारस केली` :
+                       language === 'gujarati' ? `${new Date(rec.timestamp).toLocaleDateString()} ના રોજ ભલામણ કરી` :
+                       `${new Date(rec.timestamp).toLocaleDateString()} को सिफारिश की गई`}
+                    </p>
+                  </div>
+                  <span className="text-xs text-green-600 font-medium">
+                    {rec.confidence || 85}%
+                  </span>
+                </div>
+              ));
+            })()}
+          </div>
+        </div>
+
         {/* AI Integration Notice */}
         <div className="mt-8 bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
           <div className="flex items-center space-x-3 mb-3">

@@ -2,6 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-first responsive design improvements */
+@media (max-width: 640px) {
+  .card {
+    @apply p-4;
+  }
+  
+  .btn-primary {
+    @apply text-base py-3;
+  }
+  
+  .input-field {
+    @apply text-base py-3;
+  }
+}
+
+/* Offline mode indicator */
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #f59e0b;
+  color: white;
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
+  z-index: 1000;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+.offline-indicator.show {
+  transform: translateY(0);
+}
+
+/* Large button styles for farmer-friendly UI */
+.btn-large {
+  @apply text-lg py-4 px-8 font-semibold;
+}
+
+/* Icon sizes for better visibility */
+.icon-large {
+  @apply w-8 h-8;
+}
+
+.icon-xl {
+  @apply w-12 h-12;
+}
+
 @layer base {
   body {
     font-family: 'Inter', system-ui, sans-serif;

@@ -107,6 +107,14 @@ const AdminDashboard = ({ onLogout }) => {
       route: '/admin/models'
     },
     {
+      title: 'फसल डेटाबेस अपलोड',
+      description: 'नई फसल जानकारी और डेटा अपलोड करें',
+      icon: <Database className="w-6 h-6" />,
+      color: 'text-indigo-600',
+      bgColor: 'bg-indigo-50',
+      route: '/admin/crop-database'
+    },
+    {
       title: 'सिस्टम सेटिंग्स',
       description: 'प्लेटफॉर्म सेटिंग्स कॉन्फ़िगर करें',
       icon: <Settings className="w-6 h-6" />,
@@ -240,6 +248,46 @@ const AdminDashboard = ({ onLogout }) => {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Crop Database Upload */}
+        <div className="mt-8 bg-white rounded-2xl p-6 shadow-sm border">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">फसल डेटाबेस अपलोड</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-bold text-gray-800 mb-3">CSV फाइल अपलोड</h4>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <Database className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-600 mb-3">फसल डेटा CSV फाइल अपलोड करें</p>
+                <input
+                  type="file"
+                  accept=".csv"
+                  className="hidden"
+                  id="crop-csv-upload"
+                />
+                <label
+                  htmlFor="crop-csv-upload"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors"
+                >
+                  फाइल चुनें
+                </label>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-bold text-gray-800 mb-3">AI Integration Port</h4>
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                  <span className="font-bold text-yellow-800">Backend Model Here</span>
+                </div>
+                <p className="text-yellow-700 text-sm">
+                  <strong>API Endpoint:</strong> POST /api/admin/upload-crop-database<br/>
+                  <strong>Model:</strong> Gemini API + Custom ML Model<br/>
+                  <strong>Input:</strong> CSV file with crop data, soil requirements, weather conditions
+                </p>
               </div>
             </div>
           </div>

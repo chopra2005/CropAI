@@ -148,6 +148,17 @@ const RecommendationResult = () => {
           const aiRecommendations = await aiService.getCropRecommendation(parsedData);
           setRecommendations(aiRecommendations.recommendations || []);
           setWeatherData(aiRecommendations.weatherData);
+          
+          // Save to past recommendations
+          const pastRecommendations = JSON.parse(localStorage.getItem('pastRecommendations') || '[]');
+          const newRecommendation = {
+            id: Date.now(),
+            timestamp: new Date().toISOString(),
+            formData: parsedData,
+            recommendations: aiRecommendations.recommendations || [],
+            weatherData: aiRecommendations.weatherData
+          };
+          localStorage.setItem('pastRecommendations', JSON.stringify([newRecommendation, ...pastRecommendations.slice(0, 9)])); // Keep last 10
         } else {
           // Fallback to mock data if no form data
           setRecommendations(mockRecommendations);
@@ -408,8 +419,24 @@ const RecommendationResult = () => {
                 >
                   {t.viewDetail}
                 </button>
-                <button className="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors">
-                  {t.save}
+                <button 
+                  onClick={() => {
+                    // Add to planting reminders
+                    const reminder = {
+                      id: Date.now(),
+                      cropName: cropData.crop,
+                      plantingDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+                      status: 'scheduled'
+                    };
+                    localStorage.setItem('plantingReminders', JSON.stringify([
+                      ...JSON.parse(localStorage.getItem('plantingReminders') || '[]'),
+                      reminder
+                    ]));
+                    alert(language === 'english' ? 'Reminder set successfully!' : 'रिमाइंडर सेट कर दिया गया!');
+                  }}
+                  className="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                >
+                  {language === 'english' ? 'Set Planting Reminder' : 'रोपण रिमाइंडर सेट करें'}
                 </button>
               </div>
             </div>
